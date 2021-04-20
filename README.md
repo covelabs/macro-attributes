@@ -37,17 +37,18 @@ Or add the package to your dependencies in `composer.json` and run
 
 
 ### Registering the service provider
-Next, add the `ServiceProvider` to your `providers` array in `config/app.php`:
+Ensure the `ServiceProvider` is registered in your application, either by auto-discovery, or by adding it to your 
+`providers` array in `config/app.php` manually:
 
 ```php
 'providers' => [
-    ...
+    // ...
     Sven\LaravelMacroAttributes\ServiceProvider::class,
 ];
 ```
 
-If you would like to load this package in certain environments only, take a look
-at [`sven/env-providers`](https://github.com/svenluijten/env-providers).
+If you would like to only load this package's service privder in certain environments, take a look at 
+[`sven/env-providers`](https://github.com/svenluijten/env-providers).
 
 ### Publishing the configuration file
 This package comes with sensible configuration defaults , but you may want to customize it. To do so, publish the
