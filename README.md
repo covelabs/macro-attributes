@@ -110,7 +110,7 @@ class ResponseMacros
 }
 ```
 
-_Keep in mind that methods on mixin classes must always return a callable!_
+_Keep in mind that all methods on mixin classes must always return a callable!_
 
 ## Contributing
 All contributions (pull requests, issues and feature requests) are
