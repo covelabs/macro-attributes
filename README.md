@@ -12,7 +12,7 @@ Short description of the package. What does it do and why should people download
 it? Brag a bit but don't exaggerate. Talk about what's to come and tease small
 pieces of functionality.
 
-> :namespace
+> LaravelMacroAttributes
 > :package
 > :styleci
 > :hero
@@ -47,7 +47,7 @@ Next, add the `ServiceProvider` to your `providers` array in `config/app.php`:
 ```php
 'providers' => [
     ...
-    Sven\:namespace\ServiceProvider::class,
+    Sven\LaravelMacroAttributes\ServiceProvider::class,
 ];
 ```
 
