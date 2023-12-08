@@ -1,8 +1,14 @@
 {
     "name": "cove/macro-attributes",
     "description": "Use attributes to add macros and mixins to any macroable class in Laravel.",
-    "keywords": ["laravel", "mixins", "macroable", "macro", "attributes"],
     "license": "MIT",
+    "keywords": [
+        "laravel",
+        "mixins",
+        "macroable",
+        "macro",
+        "attributes"
+    ],
     "authors": [
         {
             "name": "Sven Luijten",
