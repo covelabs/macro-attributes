@@ -1,5 +1,10 @@
-name: Tests
-on: [push, pull_request]
+name: Run tests
+on:
+    pull_request: null
+    push:
+        branches:
+            - "main"
+            - "*.x"
 
 jobs:
     test:
@@ -8,7 +13,7 @@ jobs:
         strategy:
             matrix:
                 os: [ubuntu-latest, windows-latest, macos-latest]
-                php: [8.0]
+                php: [8.1, 8.2, 8.3]
                 dependency-version: [highest, lowest]
         steps:
             - uses: actions/checkout@v2
