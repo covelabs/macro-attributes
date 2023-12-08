@@ -1,6 +1,6 @@
 <?php
 
-namespace Sven\LaravelMacroAttributes\Attributes;
+namespace Cove\MacroAttributes\Attributes;
 
 use Attribute;
 use Illuminate\Support\Traits\Macroable;

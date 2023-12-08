@@ -1,13 +1,13 @@
 <?php
 
-namespace Sven\LaravelMacroAttributes;
+namespace Cove\MacroAttributes;
 
 use HaydenPierce\ClassFinder\ClassFinder;
 use Illuminate\Support\ServiceProvider as LaravelProvider;
 use ReflectionClass;
 use ReflectionMethod;
-use Sven\LaravelMacroAttributes\Attributes\Macro;
-use Sven\LaravelMacroAttributes\Attributes\Mixin;
+use Cove\MacroAttributes\Attributes\Macro;
+use Cove\MacroAttributes\Attributes\Mixin;
 
 class ServiceProvider extends LaravelProvider
 {
@@ -36,6 +36,8 @@ class ServiceProvider extends LaravelProvider
         $namespaces = $config->get('macros.namespaces');
         $recursive = $config->get('macros.recursive');
 
+        ClassFinder::disableClassmapSupport();
+
         return array_reduce($namespaces, function (array $carry, string $namespace) use ($recursive): array {
             $classes = ClassFinder::getClassesInNamespace(
                 $namespace,
@@ -51,9 +53,12 @@ class ServiceProvider extends LaravelProvider
         foreach ($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
             $macroAttributes = $method->getAttributes(Macro::class);
 
-            /** @var \Sven\LaravelMacroAttributes\Attributes\Macro $attribute */
+            /** @var \Cove\MacroAttributes\Attributes\Macro $attribute */
             foreach ($macroAttributes as $attribute) {
-                $attribute->target::macro($method->getName(), $method->getClosure());
+                ($attribute->target)::macro(
+                    $method->getName(),
+                    $method->getClosure(),
+                );
             }
         }
     }
@@ -62,9 +67,12 @@ class ServiceProvider extends LaravelProvider
     {
         $mixinAttributes = $reflectionClass->getAttributes(Mixin::class);
 
-        /** @var \Sven\LaravelMacroAttributes\Attributes\Mixin $mixinAttribute */
+        /** @var \Cove\MacroAttributes\Attributes\Mixin $mixinAttribute */
         foreach ($mixinAttributes as $mixinAttribute) {
-            $mixinAttribute->target::mixin($reflectionClass->getName(), $mixinAttribute->replace);
+            ($mixinAttribute->target)::mixin(
+                $reflectionClass->newInstance(),
+                $mixinAttribute->replace,
+            );
         }
     }
 }

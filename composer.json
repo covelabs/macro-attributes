@@ -1,7 +1,7 @@
 {
-    "name": "sven/laravel-macro-attributes",
+    "name": "cove/macro-attributes",
     "description": "Use attributes to add macros and mixins to any macroable class in Laravel.",
-    "keywords": ["php-8", "laravel", "mixins", "macroable", "macro"],
+    "keywords": ["laravel", "mixins", "macroable", "macro", "attributes"],
     "license": "MIT",
     "authors": [
         {
@@ -11,22 +11,22 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
         "haydenpierce/class-finder": "^0.4.3",
-        "illuminate/macroable": "^8.0",
-        "illuminate/support": "^8.0"
+        "illuminate/macroable": "^10.0",
+        "illuminate/support": "^10.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "^10"
     },
     "autoload": {
         "psr-4": {
-            "Sven\\LaravelMacroAttributes\\": "src/"
+            "Cove\\MacroAttributes\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Sven\\LaravelMacroAttributes\\Tests\\": "tests/"
+            "Cove\\MacroAttributes\\Tests\\": "tests/"
         }
     },
     "config": {
@@ -35,11 +35,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Sven\\LaravelMacroAttributes\\ServiceProvider"
-            ],
-            "aliases": {
-                "LaravelMacroAttributes": "Sven\\LaravelMacroAttributes\\Facades\\LaravelMacroAttributes"
-            }
+                "Cove\\MacroAttributes\\ServiceProvider"
+            ]
         }
     }
 }
