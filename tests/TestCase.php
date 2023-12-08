@@ -1,9 +1,8 @@
 <?php
 
-namespace Sven\LaravelMacroAttributes\Tests;
+namespace Cove\MacroAttributes\Tests;
 
 use PhpUnit\Framework\TestCase as BaseTestCase;
-use Sven\LaravelMacroAttributes\ServiceProvider;
 
 abstract class TestCase extends BaseTestCase
 {
