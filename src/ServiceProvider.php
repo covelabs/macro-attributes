@@ -5,6 +5,7 @@ namespace Cove\MacroAttributes;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Illuminate\Support\ServiceProvider as LaravelProvider;
 use ReflectionClass;
+use ReflectionFunction;
 use ReflectionMethod;
 use Cove\MacroAttributes\Attributes\Macro;
 use Cove\MacroAttributes\Attributes\Mixin;
@@ -17,9 +18,13 @@ class ServiceProvider extends LaravelProvider
             __DIR__.'/../config/macros.php' => config_path('macros.php'),
         ], 'macros-config');
 
+        $functions = get_defined_functions()['user'];
+
+        $this->registerFunctionMacros($functions);
+
         foreach ($this->classes() as $class) {
             $reflectionClass = new ReflectionClass($class);
-            $this->registerMacros($reflectionClass);
+            $this->registerMethodMacros($reflectionClass);
             $this->registerMixins($reflectionClass);
         }
     }
@@ -48,7 +53,7 @@ class ServiceProvider extends LaravelProvider
         }, []);
     }
 
-    protected function registerMacros(ReflectionClass $reflectionClass): void
+    protected function registerMethodMacros(ReflectionClass $reflectionClass): void
     {
         foreach ($reflectionClass->getMethods() as $method) {
             $macroAttributes = $method->getAttributes(Macro::class);
@@ -74,6 +79,26 @@ class ServiceProvider extends LaravelProvider
             $class = $this->app->make($reflectionClass->getName());
 
             ($attribute->target)::mixin($class, $attribute->replace);
+        }
+    }
+
+    /**
+     * @param iterable<string> $functions
+     */
+    protected function registerFunctionMacros(iterable $functions): void
+    {
+        foreach ($functions as $function) {
+            $reflectionFunction = new ReflectionFunction($function);
+
+            $macroAttributes = $reflectionFunction->getAttributes(Macro::class);
+
+            foreach ($macroAttributes as $reflectionAttribute) {
+                /** @var \Cove\MacroAttributes\Attributes\Macro $attribute */
+                $attribute = $reflectionAttribute->newInstance();
+                $methodName = $reflectionFunction->getName();
+
+                ($attribute->target)::macro($methodName, $reflectionFunction->invoke(null));
+            }
         }
     }
 }
