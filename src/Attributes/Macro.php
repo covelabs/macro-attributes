@@ -6,7 +6,7 @@ use Attribute;
 use Cove\MacroAttributes\Exceptions\MustBeMacroable;
 use Illuminate\Support\Traits\Macroable;
 
-#[Attribute(Attribute::TARGET_METHOD)]
+#[Attribute(Attribute::TARGET_METHOD | Attribute::TARGET_FUNCTION)]
 final class Macro
 {
     /**

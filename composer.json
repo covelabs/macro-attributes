@@ -32,6 +32,9 @@
         }
     },
     "autoload-dev": {
+        "files": [
+            "tests/Cases/bootstrap.php"
+        ],
         "psr-4": {
             "Cove\\MacroAttributes\\Tests\\": "tests/"
         }
