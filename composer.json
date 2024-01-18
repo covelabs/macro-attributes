@@ -17,12 +17,13 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "haydenpierce/class-finder": "^0.4.3",
         "illuminate/macroable": "^10.0",
         "illuminate/support": "^10.0"
     },
     "require-dev": {
+        "orchestra/testbench": "^8.18",
         "phpunit/phpunit": "^10"
     },
     "autoload": {

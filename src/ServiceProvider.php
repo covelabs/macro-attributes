@@ -16,17 +16,17 @@ class ServiceProvider extends LaravelProvider
         $this->publishes([
             __DIR__.'/../config/macros.php' => config_path('macros.php'),
         ], 'macros-config');
-    }
-
-    public function register(): void
-    {
-        $this->mergeConfigFrom(__DIR__.'/../config/macros.php', 'macros');
 
         foreach ($this->classes() as $class) {
             $reflectionClass = new ReflectionClass($class);
             $this->registerMacros($reflectionClass);
             $this->registerMixins($reflectionClass);
         }
+    }
+
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/macros.php', 'macros');
     }
 
     protected function classes(): array
@@ -50,15 +50,16 @@ class ServiceProvider extends LaravelProvider
 
     protected function registerMacros(ReflectionClass $reflectionClass): void
     {
-        foreach ($reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+        foreach ($reflectionClass->getMethods() as $method) {
             $macroAttributes = $method->getAttributes(Macro::class);
 
-            /** @var \Cove\MacroAttributes\Attributes\Macro $attribute */
-            foreach ($macroAttributes as $attribute) {
-                ($attribute->target)::macro(
-                    $method->getName(),
-                    $method->getClosure(),
-                );
+            foreach ($macroAttributes as $reflectionAttribute) {
+                /** @var \Cove\MacroAttributes\Attributes\Macro $attribute */
+                $attribute = $reflectionAttribute->newInstance();
+                $methodName = $method->getName();
+                $class = $this->app->make($reflectionClass->getName());
+
+                ($attribute->target)::macro($methodName, $method->invoke($class));
             }
         }
     }
@@ -67,12 +68,12 @@ class ServiceProvider extends LaravelProvider
     {
         $mixinAttributes = $reflectionClass->getAttributes(Mixin::class);
 
-        /** @var \Cove\MacroAttributes\Attributes\Mixin $mixinAttribute */
         foreach ($mixinAttributes as $mixinAttribute) {
-            ($mixinAttribute->target)::mixin(
-                $reflectionClass->newInstance(),
-                $mixinAttribute->replace,
-            );
+            /** @var \Cove\MacroAttributes\Attributes\Mixin $attribute */
+            $attribute = $mixinAttribute->newInstance();
+            $class = $this->app->make($reflectionClass->getName());
+
+            ($attribute->target)::mixin($class, $attribute->replace);
         }
     }
 }
