@@ -41,7 +41,9 @@ By default, this package looks for macros in the `App\Macros` namespace. Any of 
 attributes this package provides in that namespace will automatically be registered.
 
 ### Macros
-To register a single method or function as a macro, use [`Cove\MacroAttributes\Attributes\Macro`](src/Attributes/Macro.php):
+To register a single method or function as a macro, use [`Cove\MacroAttributes\Attributes\Macro`](src/Attributes/Macro.php). 
+Unfortunately, due to how PHP doesn't allow re-binding a method to a different class, you'll have to return a callable
+from your macro methods like you would with mixins:
 
 ```php
 <?php
@@ -55,15 +57,19 @@ use Illuminate\Support\Collection;
 class Macros 
 {
     #[Macro(target: Collection::class)]
-    public function containsThreeItems()
+    public function containsThreeItems(): callable
     {
-        // ...
+        return function () {
+            // ...
+        };
     }
     
     #[Macro(target: Request::class)]
-    public function hasTwentyHeaders()
+    public function hasTwentyHeaders(): callable
     {
-        // ...
+        return function () {
+            // ...
+        };
     }
 }
 ```
@@ -95,7 +101,8 @@ class ResponseMacros
 > [!WARNING]
 > Keep in mind that all methods on mixin classes must always return a callable!
 
-You may optionally supply the attribute with a `replace` parameter to indicate that methods should be overridden:
+You may optionally supply the attribute with a `replace` parameter to indicate that pre-applied macros with the same
+name should be overridden:
 
 ```php
 <?php
@@ -108,7 +115,7 @@ use Illuminate\Http\Response;
 #[Mixin(target: Response::class, replace: true)]
 class ResponseMacros
 {
-    public function headers(): callable
+    public function previouslyAppliedMacroMethod(): callable
     {
         return function (): bool {
             // ...
@@ -127,7 +134,7 @@ contributors.
 [ico-version]: https://img.shields.io/packagist/v/cove/macro-attributes.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-green.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/cove/macro-attributes.svg?style=flat-square
-[ico-build]: https://img.shields.io/github/workflow/status/covelabs/macro-attributes/Tests?style=flat-square
+[ico-build]: https://img.shields.io/github/actions/workflow/status/covelabs/macro-attributes/run-tests.yml?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/cove/macro-attributes
 [link-downloads]: https://packagist.org/packages/cove/macro-attributes
